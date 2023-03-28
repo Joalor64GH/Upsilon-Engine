@@ -55,6 +55,7 @@ import flixel.util.FlxSave;
 import Achievements;
 import StageData;
 import FunkinLua;
+import core.ScriptCore;
 import DialogueBoxPsych;
 import Character;
 import haxe.Json;
@@ -282,9 +283,12 @@ class PlayState extends MusicBeatState
 	var achievementsArray:Array<FunkinLua> = [];
 	var achievementWeeks:Array<String> = [];
 
-	// Lua shit
+	// Scripting shit
 	public static var instance:PlayState;
+
 	public var luaArray:Array<FunkinLua> = [];
+	private var scriptArray:Array<ScriptCore> = [];
+
 	private var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
@@ -846,7 +850,32 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-		
+
+		#if HSCRIPT_SYSTEM
+		var filesPushed:Array<String> = [];
+		var foldersToCheck:Array<String> = [Paths.getPreloadPath('scripts/')];
+
+		#if MODS_ALLOWED
+		foldersToCheck.insert(0, Paths.mods('scripts/'));
+		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
+			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/scripts/'));
+		#end
+
+		for (folder in foldersToCheck)
+		{
+			if(FileSystem.exists(folder))
+			{
+				for (file in FileSystem.readDirectory(folder))
+				{
+					if(file.endsWith('.hx') && !filesPushed.contains(file))
+					{
+						scriptArray.push(new ScriptCore(folder + file));
+						filesPushed.push(file);
+					}
+				}
+			}
+		}
+		#end
 
 		// STAGE SCRIPTS
 		#if (MODS_ALLOWED && LUA_ALLOWED)
@@ -864,6 +893,23 @@ class PlayState extends MusicBeatState
 
 		if(doPush) 
 			luaArray.push(new FunkinLua(luaFile));
+		#end
+
+		#if (MODS_ALLOWED && HSCRIPT_SYSTEM)
+		var doPush:Bool = false;
+		var haxeFile:String = 'stages/' + curStage + '.hx';
+		if(FileSystem.exists(Paths.modFolders(haxeFile))) {
+			haxeFile = Paths.modFolders(haxeFile);
+			doPush = true;
+		} else {
+			haxeFile = Paths.getPreloadPath(haxeFile);
+			if(FileSystem.exists(haxeFile)) {
+				doPush = true;
+			}
+		}
+
+		if(doPush) 
+			scriptArray.push(new ScriptCore(luaFile));
 		#end
 
 		if(!modchartSprites.exists('blammedLightsBlack')) { //Creates blammed light black fade in case you didn't make your own
@@ -1187,6 +1233,32 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
+
+		#if HSCRIPT_SYSTEM
+		var filesPushed:Array<String> = [];
+		var foldersToCheck:Array<String> = [Paths.getPreloadPath('data/' + Paths.formatToSongPath(SONG.song) + '/')];
+
+		#if MODS_ALLOWED
+		foldersToCheck.insert(0, Paths.mods('data/' + Paths.formatToSongPath(SONG.song) + '/'));
+		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
+			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/data/' + Paths.formatToSongPath(SONG.song) + '/'));
+		#end
+
+		for (folder in foldersToCheck)
+		{
+			if(FileSystem.exists(folder))
+			{
+				for (file in FileSystem.readDirectory(folder))
+				{
+					if(file.endsWith('.hx') && !filesPushed.contains(file))
+					{
+						scriptArray.push(new ScriptCore(folder + file));
+						filesPushed.push(file);
+					}
+				}
+			}
+		}
+		#end
 		
 		var daSong:String = Paths.formatToSongPath(curSong);
 		if (isStoryMode && !seenCutscene)
@@ -1376,6 +1448,29 @@ class PlayState extends MusicBeatState
 				}
 		}
 	}
+
+	#if HSCRIPT_SYSTEM
+	// scriptcore crap
+	inline function executeScript(name:String, ?execCreate:Bool = false){
+		ScriptCore.instance.execute(name, execCreate);
+	}
+
+	inline function setVar(name:String, val:Dynamic){
+		ScriptCore.instance.setVariable(name, val);
+	}
+
+	inline function getVar(name:String){
+		return (ScriptCore.instance.existsVariable(name)) ? ScriptCore.instance.getVariable(name) : null;
+	}
+
+	inline function existsVar(name:String){
+		return ScriptCore.instance.existsVariable(name);
+	}
+
+	inline function executeFunc(name:String){
+		return ScriptCore.instance.executeFunc(name);
+	}
+	#end
 
 	function startCharacterLua(name:String)
 	{
@@ -1595,25 +1690,38 @@ class PlayState extends MusicBeatState
 	public function startCountdown():Void
 	{
 		if(startedCountdown) {
+			#if HSCRIPT_SYSTEM
+			callOnScripts('startCountdown', []);
+			#else
 			callOnLuas('onStartCountdown', []);
+			#end
 			return;
 		}
 
 		inCutscene = false;
-		var ret:Dynamic = callOnLuas('onStartCountdown', []);
-		if(ret != FunkinLua.Function_Stop) {
+		var ret:Dynamic = #if HSCRIPT_SYSTEM callOnScripts('startCountdown', []) #else callOnLuas('onStartCountdown', []) #end;
+		if(ret != #if HSCRIPT_SYSTEM ScriptCore #else FunkinLua #end.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
+				#if HSCRIPT_SYSTEM
+				defaultPlayerStrumX.push(playerStrums.members[i].x);
+				defaultPlayerStrumY.push(playerStrums.members[i].y);
+				#else
 				setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].x);
 				setOnLuas('defaultPlayerStrumY' + i, playerStrums.members[i].y);
+				#end
 			}
 			for (i in 0...opponentStrums.length) {
+				#if HSCRIPT_SYSTEM
+				defaultOpponentStrumX.push(opponentStrums.members[i].x);
+				defaultOpponentStrumY.push(opponentStrums.members[i].y);
+				#else
 				setOnLuas('defaultOpponentStrumX' + i, opponentStrums.members[i].x);
 				setOnLuas('defaultOpponentStrumY' + i, opponentStrums.members[i].y);
-				//if(ClientPrefs.middleScroll) opponentStrums.members[i].visible = false;
+				#end
 			}
 
 			startedCountdown = true;
@@ -2226,6 +2334,9 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		#if HSCRIPT_SYSTEM
+		callOnScripts('onFocus', []);
+		#end
 		super.onFocus();
 	}
 	
@@ -2238,6 +2349,9 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		#if HSCRIPT_SYSTEM
+		callOnScripts('onFocusLost', []);
+		#end
 		super.onFocusLost();
 	}
 
@@ -2271,7 +2385,11 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		#if HSCRIPT_SYSTEM
+		callOnScripts('onUpdate', [elapsed]);
+		#else
 		callOnLuas('onUpdate', [elapsed]);
+		#end
 
 		switch (curStage)
 		{

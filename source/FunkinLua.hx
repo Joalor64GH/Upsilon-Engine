@@ -55,7 +55,10 @@ class FunkinLua {
 	var gonnaClose:Bool = false;
 
 	public var accessedProps:Map<String, Dynamic> = null;
-	public function new(script:String) {
+
+	public var scriptCode:String;
+
+	public function new(script:String, ?scriptCode:String) {
 		#if LUA_ALLOWED
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
@@ -65,7 +68,11 @@ class FunkinLua {
 		//trace("LuaJIT version: " + Lua.versionJIT());
 
 		LuaL.dostring(lua, CLENSE);
-		var result:Dynamic = LuaL.dofile(lua, script);
+		var result;
+			if(scriptCode != null) 
+				result = LuaL.dostring(lua, scriptCode);
+			else
+				result = LuaL.dofile(lua, script);
 		var resultStr:String = Lua.tostring(lua, result);
 		if(resultStr != null && result != 0) {
 			trace('Error on lua script! ' + resultStr);
@@ -77,6 +84,8 @@ class FunkinLua {
 			lua = null;
 			return;
 		}
+		if (scriptCode != null) 
+			this.scriptCode = scriptCode;
 		scriptName = script;
 		trace('lua file loaded succesfully:' + script);
 

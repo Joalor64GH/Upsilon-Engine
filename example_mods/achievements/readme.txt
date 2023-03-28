@@ -1,1 +1,1 @@
-Place your custom achievements here!
+Put your achievement json files here

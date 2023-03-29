@@ -172,7 +172,7 @@ class Paths
 	inline static public function lua(key:String, ?library:String)
 		return getPath('$key.lua', TEXT, library);
 
-	inline static public function haxe(key:String, ?library:String)
+	inline static public function hx(key:String, ?library:String)
 		return getPath('$key.hx', TEXT, library);
 
 	static public function video(key:String)

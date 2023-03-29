@@ -3411,13 +3411,15 @@ class PlayState extends MusicBeatState
 		}
 		#end
 		
-		#if LUA_ALLOWED
+		#if HSCRIPT_SYSTEM
+		var ret:Dynamic = callOnScripts('endSong', []);
+		#elseif LUA_ALLOWED
 		var ret:Dynamic = callOnLuas('onEndSong', []);
 		#else
 		var ret:Dynamic = FunkinLua.Function_Continue;
 		#end
 
-		if(ret != FunkinLua.Function_Stop && !transitioning) {
+		if(ret != #if HSCRIPT_SYSTEM ScriptCore #else FunkinLua #end.Function_Stop && !transitioning) {
 			if (SONG.validScore)
 			{
 				#if !switch
@@ -4463,12 +4465,18 @@ class PlayState extends MusicBeatState
 			luaArray[i].stop();
 		}
 		luaArray = [];
+		scriptArray = [];
 
 		if(!ClientPrefs.controllerMode)
 		{
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
+
+		#if HSCRIPT_SYSTEM
+		callOnScripts('destroy', []);
+		#end
+
 		super.destroy();
 	}
 
@@ -4501,16 +4509,17 @@ class PlayState extends MusicBeatState
 
 		lastStepHit = curStep;
 		setOnLuas('curStep', curStep);
+		#if HSCRIPT_SYSTEM
+		callOnScripts('stepHit', [curStep]);
+		#else
 		callOnLuas('onStepHit', []);
+		#end
 	}
 
 	var lightningStrikeBeat:Int = 0;
 	var lightningOffset:Int = 8;
 
 	var lastBeatHit:Int = -1;
-	
-	
-	
 	
 	override function beatHit()
 	{
@@ -4629,8 +4638,29 @@ class PlayState extends MusicBeatState
 		lastBeatHit = curBeat;
 
 		setOnLuas('curBeat', curBeat); //DAWGG?????
+		#if HSCRIPT_SYSTEM
+		callOnScripts('onBeatHit', [curBeat]);
+		#else
 		callOnLuas('onBeatHit', []);
+		#end
 	}
+
+	#if HSCRIPT_SYSTEM
+	private function callOnScripts(funcName:String, args:Array<Dynamic>):Dynamic
+	{
+		var value:Dynamic = ScriptCore.Function_Continue;
+
+		for (i in 0...scriptArray.length)
+		{
+			final call:Dynamic = scriptArray[i].executeFunc(funcName, args);
+			final bool:Bool = call == ScriptCore.Function_Continue;
+			if (!bool && call != null)
+				value = call;
+		}
+
+		return value;
+	}
+	#end
 
 	public var closeLuas:Array<FunkinLua> = [];
 	public function callOnLuas(event:String, args:Array<Dynamic>):Dynamic {

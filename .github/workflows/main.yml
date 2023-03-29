@@ -40,7 +40,7 @@ jobs:
           haxelib install hxjsonast
           haxelib install hxCodec 2.5.1
           haxelib install actuate
-          haxelib install extension-webm
+          haxelib git extension-webm https://github.com/KadeDev/extension-webm
           hexelib run lime rebuild extension-webm linux
           haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit
           haxelib git hscript-yoshiengine https://github.com/YoshiCrafter29/hscript-improved
@@ -82,7 +82,7 @@ jobs:
           haxelib install hxjsonast
           haxelib install hxCodec 2.5.1
           haxelib install actuate
-          haxelib install extension-webm
+          haxelib git extension-webm https://github.com/KadeDev/extension-webm
           hexelib run lime rebuild extension-webm windows
           haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit
           haxelib git hscript-yoshiengine https://github.com/YoshiCrafter29/hscript-improved 
@@ -125,7 +125,7 @@ jobs:
           haxelib install hxjsonast
           haxelib install hxCodec 2.5.1
           haxelib install actuate
-          haxelib install extension-webm
+          haxelib git extension-webm https://github.com/KadeDev/extension-webm
           hexelib run lime rebuild extension-webm mac
           haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit
           haxelib git hscript-yoshiengine https://github.com/YoshiCrafter29/hscript-improved

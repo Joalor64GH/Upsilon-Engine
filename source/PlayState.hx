@@ -1706,22 +1706,12 @@ class PlayState extends MusicBeatState
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
-				#if HSCRIPT_SYSTEM
-				defaultPlayerStrumX.push(playerStrums.members[i].x);
-				defaultPlayerStrumY.push(playerStrums.members[i].y);
-				#else
 				setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].x);
 				setOnLuas('defaultPlayerStrumY' + i, playerStrums.members[i].y);
-				#end
 			}
 			for (i in 0...opponentStrums.length) {
-				#if HSCRIPT_SYSTEM
-				defaultOpponentStrumX.push(opponentStrums.members[i].x);
-				defaultOpponentStrumY.push(opponentStrums.members[i].y);
-				#else
 				setOnLuas('defaultOpponentStrumX' + i, opponentStrums.members[i].x);
 				setOnLuas('defaultOpponentStrumY' + i, opponentStrums.members[i].y);
-				#end
 			}
 
 			startedCountdown = true;
@@ -1918,9 +1908,12 @@ class PlayState extends MusicBeatState
 	var lastReportedPlayheadPosition:Int = 0;
 	var songTime:Float = 0;
 
+	public var songStarted = false;
+
 	function startSong():Void
 	{
 		startingSong = false;
+		songStarted = true;
 
 		if (useVideo)
 			GlobalVideo.get().resume();

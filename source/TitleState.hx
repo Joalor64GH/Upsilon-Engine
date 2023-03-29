@@ -23,7 +23,6 @@ import options.GraphicsSettingsSubState;
 //import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxSound;
@@ -40,7 +39,6 @@ using StringTools;
 
 typedef TitleData =
 {
-	
 	titlex:Float,
 	titley:Float,
 	startx:Float,
@@ -64,6 +62,7 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
+	//var joalorSpr:FlxSprite;
 
 	var curWacky:Array<String> = [];
 
@@ -81,32 +80,15 @@ class TitleState extends MusicBeatState
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
 		WeekData.loadTheFirstEnabledMod();
 		
-		//trace(path, FileSystem.exists(path));
-
-		/*#if (polymod && !html5)
-		if (sys.FileSystem.exists('mods/')) {
-			var folders:Array<String> = [];
-			for (file in sys.FileSystem.readDirectory('mods/')) {
-				var path = haxe.io.Path.join(['mods/', file]);
-				if (sys.FileSystem.isDirectory(path)) {
-					folders.push(file);
-				}
-			}
-			if(folders.length > 0) {
-				polymod.Polymod.init({modRoot: "mods", dirs: folders});
-			}
-		}
-		#end*/
-		
 		#if CHECK_FOR_UPDATES
 		if(!closedState) {
 			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/main/gitVersion.txt");
+			var http = new haxe.Http("https://raw.githubusercontent.com/Joalor64GH/Upsilon-Engine/main/gitVersion.txt");
 			
 			http.onData = function (data:String)
 			{
 				updateVersion = data.split('\n')[0].trim();
-				var curVersion:String = MainMenuState.psychEngineVersion.trim();
+				var curVersion:String = MainMenuState.upsilonVersion.trim();
 				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
 				if(updateVersion != curVersion) {
 					trace('versions arent matching!');
@@ -185,8 +167,6 @@ class TitleState extends MusicBeatState
 		{
 			if(FlxG.sound.music == null) {
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-
-				FlxG.sound.music.fadeIn(4, 0, 0.7);
 			}
 		}
 
@@ -201,9 +181,6 @@ class TitleState extends MusicBeatState
 			bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		}
 		
-		// bg.antialiasing = ClientPrefs.globalAntialiasing;
-		// bg.setGraphicSize(Std.int(bg.width * 0.6));
-		// bg.updateHitbox();
 		add(bg);
 
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
@@ -213,8 +190,6 @@ class TitleState extends MusicBeatState
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		logoBl.animation.play('bump');
 		logoBl.updateHitbox();
-		// logoBl.screenCenter();
-		// logoBl.color = FlxColor.BLACK;
 
 		swagShader = new ColorSwap();
 
@@ -234,15 +209,12 @@ class TitleState extends MusicBeatState
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
 		#if (desktop && MODS_ALLOWED)
 		var path = "mods/" + Paths.currentModDirectory + "/images/titleEnter.png";
-		//trace(path, FileSystem.exists(path));
 		if (!FileSystem.exists(path)){
 			path = "mods/images/titleEnter.png";
 		}
-		//trace(path, FileSystem.exists(path));
 		if (!FileSystem.exists(path)){
 			path = "assets/images/titleEnter.png";
 		}
-		//trace(path, FileSystem.exists(path));
 		titleText.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path),File.getContent(StringTools.replace(path,".png",".xml")));
 		#else
 		
@@ -253,7 +225,6 @@ class TitleState extends MusicBeatState
 		titleText.antialiasing = ClientPrefs.globalAntialiasing;
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
-		// titleText.screenCenter(X);
 		add(titleText);
 
 		credGroup = new FlxGroup();
@@ -275,6 +246,14 @@ class TitleState extends MusicBeatState
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = ClientPrefs.globalAntialiasing;
+
+		/*joalorSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('me'));
+		add(joalorSpr);
+		joalorSpr.visible = false;
+		joalorSpr.setGraphicSize(Std.int(joalorSpr.width * 0.8));
+		joalorSpr.updateHitbox();
+		joalorSpr.screenCenter(X);
+		joalorSpr.antialiasing = ClientPrefs.globalAntialiasing;*/
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
@@ -317,19 +296,6 @@ class TitleState extends MusicBeatState
 			}
 		}
 		#end
-
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
-		if (gamepad != null)
-		{
-			if (gamepad.justPressed.START)
-				pressedEnter = true;
-
-			#if switch
-			if (gamepad.justPressed.B)
-				pressedEnter = true;
-			#end
-		}
 
 		if (initialized && !transitioning && skippedIntro)
 		{
@@ -429,13 +395,15 @@ class TitleState extends MusicBeatState
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
 				case 2:
-					#if PSYCH_WATERMARKS
+					#if UPSILON_WATERMARKS
+					createCoolText(['Psych Engine Originally by'], 15);
+					#elseif PSYCH_WATERMARKS
 					createCoolText(['Psych Engine by'], 15);
 					#else
-					createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
+					createCoolText(['The Funkin Crew'], 15);
 					#end
 				case 3:
-					#if PSYCH_WATERMARKS
+					#if (PSYCH_WATERMARKS && UPSILON_WATERMARKS)
 					addMoreText('Shadow Mario', 15);
 					addMoreText('RiverOaken', 15);
 					addMoreText('shubs', 15);
@@ -445,17 +413,22 @@ class TitleState extends MusicBeatState
 				case 4:
 					deleteCoolText();
 				case 5:
-					#if PSYCH_WATERMARKS
+					#if (PSYCH_WATERMARKS && UPSILON_WATERMARKS)
 					createCoolText(['Not associated', 'with'], -40);
 					#else
 					createCoolText(['In association', 'with'], -40);
 					#end
-				case 7:
+				case 6:
 					addMoreText('newgrounds', -40);
 					ngSpr.visible = true;
+				case 7:
+					deleteCoolText();
+					createCoolText('Upsilon Engine by Joalor64 YT', -40);
+					ngSpr.visible = false;
+					//joalorSpr.visible = true;
 				case 8:
 					deleteCoolText();
-					ngSpr.visible = false;
+					//joalorSpr.visible = false;
 				case 9:
 					createCoolText([curWacky[0]]);
 				case 11:

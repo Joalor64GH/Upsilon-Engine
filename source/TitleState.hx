@@ -20,7 +20,6 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 import options.GraphicsSettingsSubState;
-//import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
@@ -131,7 +130,6 @@ class TitleState extends MusicBeatState
 		if(!initialized && FlxG.save.data != null && FlxG.save.data.fullscreen)
 		{
 			FlxG.fullscreen = FlxG.save.data.fullscreen;
-			//trace('LOADED FULLSCREEN SETTING!!');
 		}
 
 		if (FlxG.save.data.weekCompleted != null)
@@ -391,10 +389,8 @@ class TitleState extends MusicBeatState
 			switch (sickBeats)
 			{
 				case 1:
-					FlxG.sound.music.stop();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
-				case 2:
 					#if UPSILON_WATERMARKS
 					createCoolText(['Psych Engine Originally by'], 15);
 					#elseif PSYCH_WATERMARKS
@@ -423,7 +419,7 @@ class TitleState extends MusicBeatState
 					ngSpr.visible = true;
 				case 7:
 					deleteCoolText();
-					createCoolText(['Upsilon Engine by Joalor64 YT'], -40);
+					createCoolText(['Upsilon Engine by', 'Joalor64 YT'], -40);
 					ngSpr.visible = false;
 					//joalorSpr.visible = true;
 				case 8:
@@ -450,6 +446,7 @@ class TitleState extends MusicBeatState
 
 	var skippedIntro:Bool = false;
 	var increaseVolume:Bool = false;
+	
 	function skipIntro():Void
 	{
 		if (!skippedIntro)

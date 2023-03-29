@@ -12,6 +12,8 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 
+using StringTools;
+
 typedef AchievementMeta = {
 	public var name:String;
 	public var desc:String;
@@ -38,8 +40,6 @@ typedef AchievementMeta = {
 	**/
 	public var ?clearAchievements:Bool; 
 }
-
-using StringTools;
 
 class Achievements {
 	public static var achievementsStuff:Array<Dynamic> = [ //Name, Description, Achievement save tag, Hidden achievement

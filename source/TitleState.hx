@@ -423,7 +423,7 @@ class TitleState extends MusicBeatState
 					ngSpr.visible = true;
 				case 7:
 					deleteCoolText();
-					createCoolText('Upsilon Engine by Joalor64 YT', -40);
+					createCoolText(['Upsilon Engine by Joalor64 YT'], -40);
 					ngSpr.visible = false;
 					//joalorSpr.visible = true;
 				case 8:

@@ -308,6 +308,14 @@ class FunkinLua {
 				loadFrames(spr, image, spriteType);
 			}
 		});
+
+		Lua_helper.add_callback(lua, "getLangCode", function() {
+			return LanguageSupport.currentLangCode();
+		});
+
+		Lua_helper.add_callback(lua, "getLangName", function() {
+			return LanguageSupport.currentLangName();
+		});
 		
 		Lua_helper.add_callback(lua, "getProperty", function(variable:String) {
 			var killMe:Array<String> = variable.split('.');

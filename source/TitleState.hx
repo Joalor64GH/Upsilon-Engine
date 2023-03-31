@@ -399,7 +399,7 @@ class TitleState extends MusicBeatState
 					createCoolText(['The Funkin Crew'], 15);
 					#end
 				case 3:
-					#if (PSYCH_WATERMARKS && UPSILON_WATERMARKS)
+					#if (UPSILON_WATERMARKS && PSYCH_WATERMARKS)
 					addMoreText('Shadow Mario', 15);
 					addMoreText('RiverOaken', 15);
 					addMoreText('shubs', 15);
@@ -431,14 +431,14 @@ class TitleState extends MusicBeatState
 					addMoreText(curWacky[1]);
 				case 12:
 					deleteCoolText();
-				case 13:
-					addMoreText('Friday');
 				case 14:
-					addMoreText('Night');
+					addMoreText('Friday');
 				case 15:
+					addMoreText('Night');
+				case 16:
 					addMoreText('Funkin');
 
-				case 16:
+				case 17:
 					skipIntro();
 			}
 		}

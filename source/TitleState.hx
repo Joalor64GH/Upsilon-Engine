@@ -400,11 +400,11 @@ class TitleState extends MusicBeatState
 					#end
 				case 3:
 					#if (UPSILON_WATERMARKS && PSYCH_WATERMARKS)
-					addMoreText('Shadow Mario', 15);
+					addMoreText('ShadowMario', 15);
 					addMoreText('RiverOaken', 15);
-					addMoreText('shubs', 15);
+					addMoreText('Yoshubs', 15);
 					#else
-					addMoreText('present');
+					addMoreText('presents');
 					#end
 				case 4:
 					deleteCoolText();

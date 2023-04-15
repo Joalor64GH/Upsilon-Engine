@@ -303,6 +303,9 @@ class PlayState extends MusicBeatState
 	// Less laggy controls
 	private var keysArray:Array<Dynamic>;
 
+	//the payload for beat-based buttplug support
+	public var bpPayload:String = "";
+
 	override public function create()
 	{
 		Paths.clearStoredMemory();
@@ -1973,6 +1976,9 @@ class PlayState extends MusicBeatState
 		FlxG.sound.list.add(vocals);
 		FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.song)));
 
+		//generate the payload for the frontend
+		bpPayload = ButtplugUtils.createPayload(Conductor.crochet);
+
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
 
@@ -3335,6 +3341,8 @@ class PlayState extends MusicBeatState
 	public var transitioning = false;
 	public function endSong():Void
 	{
+		ButtplugUtils.stop();
+		
 		if (useVideo)
 		{
 			GlobalVideo.get().stop();
@@ -4550,6 +4558,9 @@ class PlayState extends MusicBeatState
 			lightningStrikeShit();
 		}
 		lastBeatHit = curBeat;
+
+		//buttplug fuckery
+		ButtplugUtils.sendPayload(bpPayload);
 
 		setOnLuas('curBeat', curBeat); //DAWGG?????
 		#if HSCRIPT_SYSTEM

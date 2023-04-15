@@ -62,12 +62,8 @@ class OptionsState extends MusicBeatState
 				openSubState(new NotesSubState());
 			case 'Controls':
 				openSubState(new ControlsSubState());
-			case 'Graphics':
-				openSubState(new GraphicsSettingsSubState());
-			case 'Visuals and UI':
-				openSubState(new VisualsUISubState());
-			case 'Gameplay':
-				openSubState(new GameplaySettingsSubState());
+			case 'Preferences':
+				openSubState(new PreferencesSubState());
 			case 'Adjust Delay and Combo':
 				LoadingState.loadAndSwitchState(new NoteOffsetState());
 		}
@@ -89,16 +85,7 @@ class OptionsState extends MusicBeatState
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
-
-		for (i in 0...options.length)
-		{
-			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
-			optionText.screenCenter();
-			optionText.y += (100 * (i - (options.length / 2))) + 50;
-			grpOptions.add(optionText);
-		}
+		initOptions();
 
 		selectorLeft = new Alphabet(0, 0, '>', true, false);
 		add(selectorLeft);

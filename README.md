@@ -1,10 +1,12 @@
 # Upsilon Engine
-Some weird modified version of PE 0.5.2h that steals features from other engines.
+Some weird modified version of PE 0.5.2h that steals features from other engines and has a bunch of other random stuff.
 
 # Features
 * HX Support (ChainSaw Engine)
 * Multilanguage Support (Psych Engine-xt)
 * WebM Video Support (Kade Engine)
+* Dark Mode Application Bar + Show Error Messages (Codename Engine)
+* Buttplug Plugin
 
 # Friday Night Funkin' - Psych Engine
 Engine originally used on [Mind Games Mod](https://gamebanana.com/mods/301107), intended to be a fix for the vanilla version's many issues while keeping the casual play aspect of it. Also aiming to be an easier alternative to newbie coders.

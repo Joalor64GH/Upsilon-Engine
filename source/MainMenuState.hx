@@ -35,6 +35,7 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
+
 	public static var firstStart:Bool = true;
 	public static var finishedFunnyMove:Bool = false;
 	
@@ -99,8 +100,6 @@ class MainMenuState extends MusicBeatState
 		magenta.antialiasing = ClientPrefs.globalAntialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
-		
-		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
@@ -268,6 +267,10 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new MasterEditorMenu());
 			}
 			#end
+			else if (FlxG.keys.justPressed.D)
+			{
+				MusicBeatState.switchState(new desktop.DesktopMain());
+			}
 		}
 
 		super.update(elapsed);

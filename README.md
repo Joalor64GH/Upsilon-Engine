@@ -5,7 +5,7 @@ Some weird modified version of PE 0.5.2h that steals features from other engines
 * HX Support (ChainSaw Engine)
 * Multilanguage Support (Psych Engine-xt)
 * WebM Video Support (Kade Engine)
-* Dark Mode Application Bar + Show Error Messages (Codename Engine)
+* Dark Mode Application Bar + In-Game Desktop (Codename Engine)
 * Buttplug Plugin
 
 # Friday Night Funkin' - Psych Engine

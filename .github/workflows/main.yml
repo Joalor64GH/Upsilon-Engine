@@ -82,7 +82,6 @@ jobs:
           haxelib install hxjsonast
           haxelib install hxCodec 2.5.1
           haxelib install actuate
-          haxelib git flixel-yc29 https://www.github.com/YoshiCrafter29/flixel
           haxelib git extension-webm https://github.com/KadeDev/extension-webm
           haxelib run lime rebuild extension-webm windows
           haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit

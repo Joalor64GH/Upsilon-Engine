@@ -267,10 +267,6 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new MasterEditorMenu());
 			}
 			#end
-			else if (FlxG.keys.justPressed.D)
-			{
-				MusicBeatState.switchState(new desktop.DesktopMain());
-			}
 		}
 
 		super.update(elapsed);

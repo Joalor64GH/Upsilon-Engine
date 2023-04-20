@@ -35,11 +35,9 @@ class OptionsState extends MusicBeatState
 		'Dialogue Language',
 		#if MODS_ALLOWED 'Mod Options', #end
 		'Note Colors', 
-		'Controls', 
-		'Adjust Delay and Combo', 
-		'Graphics', 
-		'Visuals and UI', 
-		'Gameplay'
+		'Controls',
+		'Preferences',
+		'Adjust Delay and Combo'
 	];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;

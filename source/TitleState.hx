@@ -32,7 +32,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
-
 import options.*;
 
 using StringTools;
@@ -405,10 +404,14 @@ class TitleState extends MusicBeatState
 					createCoolText(['The Funkin Crew'], 15);
 					#end
 				case 3:
-					#if (UPSILON_WATERMARKS && PSYCH_WATERMARKS)
+					#if UPSILON_WATERMARKS
 					addMoreText('ShadowMario', 15);
 					addMoreText('RiverOaken', 15);
 					addMoreText('Yoshubs', 15);
+					#elseif PSYCH_WATERMARKS
+					addMoreText('Shadow Mario', 15);
+					addMoreText('RiverOaken', 15);
+					addMoreText('shubs', 15);
 					#else
 					addMoreText('presents');
 					#end
@@ -423,15 +426,16 @@ class TitleState extends MusicBeatState
 				case 6:
 					addMoreText('newgrounds', -40);
 					ngSpr.visible = true;
-				case 7:
-					deleteCoolText();
-					createCoolText(['Upsilon Engine by', 'Joalor64 YT'], -40);
-					ngSpr.visible = false;
-					//joalorSpr.visible = true;
 				case 8:
 					deleteCoolText();
-					//joalorSpr.visible = false;
+					createCoolText(['Upsilon Engine by'], 15);
+					addMoreText('Joalor64 YT');
+					ngSpr.visible = false;
+					//joalorSpr.visible = true;
 				case 9:
+					deleteCoolText();
+					//joalorSpr.visible = false;
+				case 10:
 					createCoolText([curWacky[0]]);
 				case 11:
 					addMoreText(curWacky[1]);

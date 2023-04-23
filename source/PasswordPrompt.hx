@@ -20,13 +20,13 @@ class PasswordPrompt extends MusicBeatSubstate
 	{
 		super();
 
-		var black:FlxSprite = new FlxSprite(0, 0).makeGraphic(1280, 400,FlxColor.BLACK);
+		var black:FlxSprite = new FlxSprite(0, 0).makeGraphic(1280, 400, FlxColor.BLACK);
 		black.screenCenter();
 
 		var txt:FlxText = new FlxText(0, 0, 0, "Enter Password", 32);
 		txt.screenCenter();
 		input = new FlxUIInputText(10, 10, FlxG.width, '', 8);
-		input.setFormat(Paths.font("vcr.ttf"), 96, FlxColor.WHITE,FlxTextAlign.CENTER);
+		input.setFormat(Paths.font("vcr.ttf"), 96, FlxColor.WHITE, FlxTextAlign.CENTER);
 		input.alignment = CENTER;
 		input.setBorderStyle(OUTLINE, 0xFF000000, 5, 1);
 		input.screenCenter();
@@ -49,6 +49,7 @@ class PasswordPrompt extends MusicBeatSubstate
 
 		if (controls.ACCEPT){
             		// add custom functions here
+			FlxG.mouse.visible = false;
 			FlxG.state.closeSubState();
 		}
 		if (controls.BACK){
